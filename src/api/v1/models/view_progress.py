@@ -1,6 +1,5 @@
-from pydantic import BaseModel, StrictInt, StrictStr
+from pydantic import BaseModel, StrictInt
 
 
 class SaveViewProgressInput(BaseModel):
-    user_id: StrictStr
     viewed_frame: StrictInt

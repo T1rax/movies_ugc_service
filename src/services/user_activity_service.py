@@ -7,7 +7,6 @@ import orjson
 from fastapi import HTTPException
 from starlette.responses import JSONResponse
 
-from src.api.v1.models.view_progress import SaveViewProgressInput
 from src.brokers.base import BaseProducer
 from src.brokers.exceptions import ProducerError
 from src.brokers.models import UserViewProgressEventModel
@@ -25,26 +24,26 @@ class UserActivityService(BaseService):
         await self._producer.send(key=key, value=value)
 
     async def save_view_progress(
-        self, film_id: str, payload: SaveViewProgressInput
+        self, film_id: str, viewed_frame: int, user_id: str
     ) -> NoReturn:
         view_progress = UserViewProgressEventModel(
-            user_id=payload.user_id,
+            user_id=user_id,
             film_id=film_id,
-            viewed_frame=payload.viewed_frame,
+            viewed_frame=viewed_frame,
             event_time=str(datetime.now().strftime("%Y-%m-%d %H:%M:%S")),
         )
 
         try:
-            key = f"{film_id}:{payload.user_id}".encode("utf-8")
+            key = f"{film_id}:{user_id}".encode("utf-8")
             await self.send(
                 value=orjson.dumps(view_progress.dict()),
                 key=key,
             )
         except ProducerError:
             logger.warning(
-                "Error sending the event: film_id %s payload %s",
+                "Error sending the event: film_id %s user_id %s",
                 film_id,
-                payload.dict(),
+                user_id,
                 exc_info=True,
             )
             raise HTTPException(
