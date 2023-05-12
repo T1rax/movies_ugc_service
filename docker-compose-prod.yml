@@ -37,15 +37,6 @@ services:
     depends_on:
       - zookeeper
   
-  etl:
-    extends:
-      file: docker-compose-base.yml
-      service: etl
-    depends_on:
-      - broker
-      - clickhouse-node1
-      - clickhouse-node2
-  
   fastapi:
     extends:
       file: docker-compose-base.yml

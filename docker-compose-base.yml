@@ -28,7 +28,9 @@ services:
       - ./data/broker/data:/var/lib/broker/data
   
   clickhouse-node1:
-    image: yandex/clickhouse-server:20.4
+    build:
+      context: .
+      dockerfile: ./configs/db/docker/Dockerfile
     container_name: clickhouse-node1
     hostname: clickhouse-node1
     volumes:
@@ -40,13 +42,6 @@ services:
     hostname: clickhouse-node2
     volumes:
       - ./data/db/node2:/etc/clickhouse-server
-
-  etl:
-    build: 
-      context: ./.
-      dockerfile: src/etl/Dockerfile
-    env_file:
-      - ./.env
 
   fastapi:
     build: 
