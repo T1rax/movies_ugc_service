@@ -2,5 +2,6 @@
 
 set -e
 
-# Ниже команды для запуска API
-# По идее старт gunicorn
+# Start server
+echo "Starting server"
+gunicorn --worker-class=uvicorn.workers.UvicornWorker --workers=4 -b ${PROJECT_HOST}:${PROJECT_PORT} src.app:app
